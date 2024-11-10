@@ -14,10 +14,10 @@ function App() {
     setItems(copy);
   };
 
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
   const onClickRow = (i) => {
-    setSelectedItem(items[i]);
+    setSelectedIndex(i);
     setModal(true);
   };
   const 글정렬 = () => {
@@ -51,17 +51,32 @@ function App() {
           </div>
         );
       })}
-      {modal ? <Modal item={selectedItem} /> : null}
+      {modal ? <Modal item={items[selectedIndex]} setItems={setItems} /> : null}
     </div>
   );
 }
 
 function Modal(props) {
+  const editTitle = () => {
+    let newTitle = prompt("바꿀 제목을 입력하세요");
+    props.setItem((prev) => {
+      let copy = [...prev];
+      copy[props.item.id].title = newTitle;
+      return copy;
+    });
+  };
   return (
     <div className="modal">
       <h4>{props.item.title}</h4>
       <p>{props.item.date}</p>
       <p>{props.item.detail}</p>
+      <button
+        onClick={() => {
+          editTitle();
+        }}
+      >
+        글 수정
+      </button>
     </div>
   );
 }
