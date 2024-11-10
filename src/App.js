@@ -3,18 +3,36 @@ import { useState } from "react";
 
 function App() {
   let [items, setItems] = useState([
-    { id: 0, title: "남자 코트 추천", like: 3000, date: "2011-01-01" },
-    { id: 1, title: "강남 우동 맛집", like: 4000, date: "2011-01-01" },
-    { id: 2, title: "파이썬 독학", like: 4500, date: "2011-01-01" },
+    { id: 0, title: "남자 코트 추천", like: 3000, date: "21일" },
+    { id: 1, title: "강남 우동 맛집", like: 4000, date: "1일" },
+    { id: 2, title: "파이썬 독학", like: 4500, date: "9일" },
   ]);
+  let [selectedIndex, setSelectedIndex] = useState(null);
+  let [input, setInput] = useState("");
+
+  const addPost = () => {
+    let copy = [...items];
+    copy.push({
+      id: copy.length,
+      title: input,
+      like: 0,
+      date: new Date().getDate() + "일",
+    });
+    setItems(copy);
+    setInput("");
+  };
+
+  const deletePost = (i) => {
+    let copy = [...items];
+    copy.splice(i, 1);
+    setItems(copy);
+  };
 
   const updateLike = (i) => {
     let copy = [...items];
     copy[i].like++;
     setItems(copy);
   };
-
-  const [selectedIndex, setSelectedIndex] = useState(null);
 
   const onClickRow = (i) => {
     setSelectedIndex(i);
@@ -44,19 +62,51 @@ function App() {
               onClickRow(i);
             }}
           >
-            <h4 onClick={() => updateLike(i)}>
+            <h4
+              onClick={(e) => {
+                e.stopPropagation();
+                updateLike(i);
+              }}
+            >
               {item.title} / {item.like}
             </h4>
-            <p>2월 17일 발행</p>
+            <p>
+              {item.date} 발행{" "}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deletePost(i);
+                }}
+              >
+                삭제
+              </button>
+            </p>
           </div>
         );
       })}
+      <div>
+        <input
+          style={{ margin: "10px 5px" }}
+          type="text"
+          onChange={(e) => setInput(e.target.value)}
+        ></input>
+        <button
+          onClick={() => {
+            addPost();
+          }}
+        >
+          등록
+        </button>
+      </div>
       {modal ? <Modal item={items[selectedIndex]} setItems={setItems} /> : null}
     </div>
   );
 }
 
 function Modal(props) {
+  if (props.item === undefined) {
+    return;
+  }
   const editTitle = () => {
     let newTitle = prompt("바꿀 제목을 입력하세요");
     props.setItem((prev) => {
