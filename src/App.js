@@ -3,9 +3,9 @@ import { useState } from "react";
 
 function App() {
   let [items, setItems] = useState([
-    { id: 0, title: "남자 코트 추천", like: 3000 },
-    { id: 1, title: "강남 우동 맛집", like: 4000 },
-    { id: 2, title: "파이썬 독학", like: 4500 },
+    { id: 0, title: "남자 코트 추천", like: 3000, date: "2011-01-01" },
+    { id: 1, title: "강남 우동 맛집", like: 4000, date: "2011-01-01" },
+    { id: 2, title: "파이썬 독학", like: 4500, date: "2011-01-01" },
   ]);
 
   const updateLike = (i) => {
@@ -14,6 +14,12 @@ function App() {
     setItems(copy);
   };
 
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const onClickRow = (i) => {
+    setSelectedItem(items[i]);
+    setModal(true);
+  };
   const 글정렬 = () => {
     let copy = [...items];
     copy.sort((a, b) => {
@@ -31,7 +37,13 @@ function App() {
 
       {items.map((item, i) => {
         return (
-          <div className="list" key={i} onClick={() => setModal(!modal)}>
+          <div
+            className="list"
+            key={i}
+            onClick={() => {
+              onClickRow(i);
+            }}
+          >
             <h4 onClick={() => updateLike(i)}>
               {item.title} / {item.like}
             </h4>
@@ -39,17 +51,17 @@ function App() {
           </div>
         );
       })}
-      {modal ? <Modal /> : null}
+      {modal ? <Modal item={selectedItem} /> : null}
     </div>
   );
 }
 
-function Modal() {
+function Modal(props) {
   return (
     <div className="modal">
-      <h4>제목</h4>
-      <p>날짜</p>
-      <p>상세내용</p>
+      <h4>{props.item.title}</h4>
+      <p>{props.item.date}</p>
+      <p>{props.item.detail}</p>
     </div>
   );
 }
