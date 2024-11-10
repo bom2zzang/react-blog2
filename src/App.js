@@ -131,4 +131,13 @@ function Modal(props) {
   );
 }
 
+// class Modal2 extends React.Component {
+//   constructor() {
+//     super();
+//   }
+//   render() {
+//     return <div>모달2</div>;
+//   }
+// }
+
 export default App;
